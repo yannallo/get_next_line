@@ -1,0 +1,5 @@
+Bonjour je suis la premiere ligne
+Bonsoir je suis la deuxieme ligne
+Bravo tu progresse (troisieme)
+Bon c la derniere 4
+		FIN			
