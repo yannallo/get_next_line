@@ -11,14 +11,22 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
-#include <fcntl.h>
+#include "libft.h"
 
 char *get_next_line(int fd)
 {
-	printf("%d", fd);
-	return ("wow");
+	char	*buf;
+	t_list	*list;
+
+	
+	while (check(buf))
+	{
+		read(fd, buf, 5);
+
+	}
 }
+
+#include <fcntl.h>
 
 int main(void)
 {
