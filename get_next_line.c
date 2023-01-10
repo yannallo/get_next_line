@@ -11,24 +11,51 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "libft.h"
+
+#include <stdio.h>
+
+void	printlst(t_list **list)
+{
+	while ((*list)->next)
+	{
+		printf("%s\n", (*list)->content);
+		*list = (*list)->next;
+	}
+	printf("%s\n", (*list)->content);
+}
+
+int	check(char *buffer)
+{
+	size_t	i;
+
+	i = 0;
+	while (buffer[i])
+	{
+		if (buffer[i] == '\n')
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 char *get_next_line(int fd)
 {
-	char	*buf;
-	t_list	*list;
+	char 	*buffer;
+	t_list	**list;
 
-	
-	while (check(buf))
+	buffer = NULL;
+	while (check(buffer) && read(fd, buffer, 5) != 0)
 	{
-		read(fd, buf, 5);
-
+		printf("buffer == %s\n", buffer);
 	}
+	return ("WoW");
 }
 
 #include <fcntl.h>
 
 int main(void)
 {
-	get_next_line(open("book.txt", O_RDONLY));
+	int fd = open("book.txt", O_RDONLY);
+	get_next_line(fd);
+	close(fd);
 }

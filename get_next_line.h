@@ -12,11 +12,15 @@
 
 #ifndef GET_NEXT_LINE
 # define GET_NEXT_LINE
+#include <stdlib.h>
+#include <unistd.h>
 
 typedef struct s_list
 {
-	char			*temp;
+	char			*content;
 	struct s_list	*next;
-}					t_list;
+}				t_list;
+
+void	ft_lstadd_back(t_list **list, char *content);
 
 #endif
