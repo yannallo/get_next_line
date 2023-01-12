@@ -34,30 +34,12 @@ t_list *ft_newlst(char *data)
 	return (new);
 }
 
-void	ft_lstadd_back(t_list **head, char *buf)
+void	ft_lstadd_back(t_list **head, t_list *new)
 {
 	t_list	*tracer;
 
 	tracer = *head;
 	while (tracer->next)
 		tracer = tracer->next;
-	tracer->next = ft_newlst(buf);
-}
-
-#include <stdio.h>
-
-int main(void)
-{
-	t_list	*list;
-
-	list = ft_newlst("Bonjour");
-	ft_lstadd_back(&list, "Bonsoir");
-	ft_lstadd_back(&list, "Bonsoir");
-	ft_lstadd_back(&list, "Bonnonn");
-	while (list->next)
-	{
-		printf("%s\n", list->data);
-		list = list->next;
-	}
-	printf("%s\n", list->data);
+	tracer->next = new;
 }

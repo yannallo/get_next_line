@@ -31,12 +31,21 @@ int	check(char *buffer)
 char	*get_next_line(int fd)
 {
 	char	buffer[8];
-	t_list	*list;
+	t_list	**list;
+	t_list	*tmp;
 
+	//(*list) = ft_newlst("First node"); //Origine probleme == **list essayer plutot *list;
 	while (check(buffer) == 0 && read(fd, buffer, 8))
 	{
-		ft_lstadd_back(&list, buffer);
+		tmp = ft_newlst(buffer);
+		printf("%s", tmp->data);
+		ft_lstadd_back(list, tmp);
 	}
+	/*while ((*list)->next)
+	{
+		printf("%s", (*list)->data);
+		list = &(*list)->next;
+	}*/
 	return ("WOW");
 }
 

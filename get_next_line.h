@@ -22,6 +22,7 @@ typedef	struct s_list
 }				t_list;
 
 char	*get_next_line(int fd);
-void	ft_lstadd_back(t_list **head, char *buf);
+void	ft_lstadd_back(t_list **head, t_list *new);
+t_list *ft_newlst(char *data);
 
 #endif
