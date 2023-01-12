@@ -12,23 +12,52 @@
 
 #include "get_next_line.h"
 
-void	ft_lstadd_back(t_list **list, char *content)
+size_t	ft_strlen(char *s)
 {
-	t_list	*temp;
+	size_t	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
+
+t_list *ft_newlst(char *data)
+{
 	t_list	*new;
 
 	new = malloc(sizeof(t_list));
-	if (!list)
-		return ;
-	new->content = content;
+	if (!new)
+		return (NULL);
+	new->data = data;
 	new->next = NULL;
-	if (!*list)
+	return (new);
+}
+
+void	ft_lstadd_back(t_list **head, char *buf)
+{
+	t_list	*tracer;
+
+	tracer = *head;
+	while (tracer->next)
+		tracer = tracer->next;
+	tracer->next = ft_newlst(buf);
+}
+
+#include <stdio.h>
+
+int main(void)
+{
+	t_list	*list;
+
+	list = ft_newlst("Bonjour");
+	ft_lstadd_back(&list, "Bonsoir");
+	ft_lstadd_back(&list, "Bonsoir");
+	ft_lstadd_back(&list, "Bonnonn");
+	while (list->next)
 	{
-		*list = new;
-		return ;
+		printf("%s\n", list->data);
+		list = list->next;
 	}
-	temp = *list;
-	while (temp->next)
-		temp = temp->next;
-	temp->next = new;
+	printf("%s\n", list->data);
 }

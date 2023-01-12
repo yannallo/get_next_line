@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: yallo <yallo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/23 15:15:22 by yallo             #+#    #+#             */
-/*   Updated: 2022/12/23 15:15:22 by yallo            ###   ########.fr       */
+/*   Created: 2023/01/12 14:22:09 by yallo             #+#    #+#             */
+/*   Updated: 2023/01/12 14:22:09 by yallo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-typedef struct s_list
+typedef	struct s_list
 {
-	char			*content;
+	char			*data;
 	struct s_list	*next;
 }				t_list;
 
-void	ft_lstadd_back(t_list **list, char *content);
+char	*get_next_line(int fd);
+void	ft_lstadd_back(t_list **head, char *buf);
 
 #endif

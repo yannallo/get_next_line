@@ -14,16 +14,6 @@
 
 #include <stdio.h>
 
-void	printlst(t_list **list)
-{
-	while ((*list)->next)
-	{
-		printf("%s\n", (*list)->content);
-		*list = (*list)->next;
-	}
-	printf("%s\n", (*list)->content);
-}
-
 int	check(char *buffer)
 {
 	size_t	i;
@@ -32,23 +22,22 @@ int	check(char *buffer)
 	while (buffer[i])
 	{
 		if (buffer[i] == '\n')
-			return (1);
+			return (-1);
 		i++;
 	}
 	return (0);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	char 	*buffer;
-	t_list	**list;
+	char	buffer[8];
+	t_list	*list;
 
-	buffer = NULL;
-	while (check(buffer) && read(fd, buffer, 5) != 0)
+	while (check(buffer) == 0 && read(fd, buffer, 8))
 	{
-		printf("buffer == %s\n", buffer);
+		ft_lstadd_back(&list, buffer);
 	}
-	return ("WoW");
+	return ("WOW");
 }
 
 #include <fcntl.h>
