@@ -12,6 +12,7 @@
 
 #ifndef GET_NEXT_LINE
 # define GET_NEXT_LINE
+# define BUFFER_SIZE 8
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -22,7 +23,8 @@ typedef	struct s_list
 }				t_list;
 
 char	*get_next_line(int fd);
-void	ft_lstadd_back(t_list **head, t_list *new);
+void	ft_lstadd_back(t_list **head, char *buffer);
 t_list *ft_newlst(char *data);
+void	printlst(t_list *list);
 
 #endif

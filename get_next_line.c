@@ -28,24 +28,32 @@ int	check(char *buffer)
 	return (0);
 }
 
+void	printlst(t_list *list)
+{
+	int i = 0;
+	t_list	*new;
+
+	while (list->next)
+	{
+		new = list;
+		printf("%d == %p == %s\n", i, list, list->data);
+		list = list->next;
+		free(new);
+		i++;
+	}
+}
+
 char	*get_next_line(int fd)
 {
-	char	buffer[8];
-	t_list	**list;
-	t_list	*tmp;
+	char	buffer[BUFFER_SIZE + 1];
+	t_list	*list;
 
-	//(*list) = ft_newlst("First node"); //Origine probleme == **list essayer plutot *list;
-	while (check(buffer) == 0 && read(fd, buffer, 8))
+	list = NULL;
+	while (check(buffer) == 0 && read(fd, buffer, BUFFER_SIZE) != 0)
 	{
-		tmp = ft_newlst(buffer);
-		printf("%s", tmp->data);
-		ft_lstadd_back(list, tmp);
+		ft_lstadd_back(&list, buffer);
 	}
-	/*while ((*list)->next)
-	{
-		printf("%s", (*list)->data);
-		list = &(*list)->next;
-	}*/
+	printlst(list);
 	return ("WOW");
 }
 
@@ -53,6 +61,7 @@ char	*get_next_line(int fd)
 
 int main(void)
 {
+	int i = 0;
 	int fd = open("book.txt", O_RDONLY);
 	get_next_line(fd);
 	close(fd);
