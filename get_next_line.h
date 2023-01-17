@@ -12,13 +12,8 @@
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-# ifndef BUFFER_SIZE
-# define BUFFER_SIZE 8
-# endif
 # include <stdlib.h>
 # include <unistd.h>
-
-# include <stdio.h>
 
 typedef struct s_list
 {
@@ -29,6 +24,8 @@ typedef struct s_list
 char	*get_next_line(int fd);
 void	ft_lstadd_back(t_list **head, char *buffer);
 int		check(char *buffer);
-char	*make_line(t_list *head, char *buffer);
-
+char	*make_line(t_list *head);
+# ifndef BUFFER_SIZE
+# define BUFFER_SIZE 8
+# endif
 #endif

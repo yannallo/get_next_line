@@ -49,7 +49,7 @@ size_t	size_of(t_list *head)
 	return (count + 1);
 }
 
-char	*make_line(t_list *head, char *buffer)
+char	*make_line(t_list *head)
 {
 	int		i_list;
 	int		count;
@@ -74,7 +74,6 @@ char	*make_line(t_list *head, char *buffer)
 
 void	ft_free(t_list *list)
 {
-	size_t	i;
 	t_list	*head;
 
 	while (list->next != NULL)
@@ -88,18 +87,21 @@ void	ft_free(t_list *list)
 
 char	*get_next_line(int fd)
 {
-	static t_list	*list;
+	t_list	*list;
 	char	*line;
 	char	buffer[BUFFER_SIZE + 1];
 
 	list = NULL;
+	if (fd < 0)
+	return (NULL);
 	while (read(fd, buffer, BUFFER_SIZE) != 0 && check(buffer) == -1)
 		ft_lstadd_back(&list, buffer);
-	line = make_line(list, buffer);
+	line = make_line(list);
 	ft_free(list);
 	return (line);
 }
 
+/*
 #include <fcntl.h>
 
 int main(void)
@@ -111,3 +113,4 @@ int main(void)
 	printf("%s", line);
 	close(fd);
 }
+*/
