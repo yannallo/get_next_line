@@ -5,18 +5,22 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: yallo <yallo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/12 14:22:09 by yallo             #+#    #+#             */
-/*   Updated: 2023/01/12 14:22:09 by yallo            ###   ########.fr       */
+/*   Created: 2023/01/17 11:46:01 by yallo             #+#    #+#             */
+/*   Updated: 2023/01/17 11:46:01 by yallo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE
-# define GET_NEXT_LINE
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
+# ifndef BUFFER_SIZE
 # define BUFFER_SIZE 8
-#include <stdlib.h>
-#include <unistd.h>
+# endif
+# include <stdlib.h>
+# include <unistd.h>
 
-typedef	struct s_list
+# include <stdio.h>
+
+typedef struct s_list
 {
 	char			*data;
 	struct s_list	*next;
@@ -24,7 +28,7 @@ typedef	struct s_list
 
 char	*get_next_line(int fd);
 void	ft_lstadd_back(t_list **head, char *buffer);
-t_list *ft_newlst(char *data);
-void	printlst(t_list *list);
+int		check(char *buffer);
+char	*make_line(t_list *head, char *buffer);
 
 #endif
