@@ -15,6 +15,8 @@
 # include <stdlib.h>
 # include <unistd.h>
 
+#include <stdio.h>
+
 typedef struct s_list
 {
 	char			*data;
@@ -22,9 +24,15 @@ typedef struct s_list
 }				t_list;
 
 char	*get_next_line(int fd);
-void	ft_lstadd_back(t_list **head, char *buffer);
-int		check(char *buffer);
-char	*make_line(t_list *head);
+//GNL
+void	read_addlst(int fd, t_list **list, int *readed_ptr);
+void	make_line(t_list *list, char **line);
+void	addlst(t_list **list, char *buffer, int readed);
+
+//GNL utils
+int		found_newline(t_list *head_ref);
+size_t	line_len(t_list *list);
+
 # ifndef BUFFER_SIZE
 # define BUFFER_SIZE 8
 # endif

@@ -5,112 +5,131 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: yallo <yallo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/23 15:17:07 by yallo             #+#    #+#             */
-/*   Updated: 2022/12/23 15:17:07 by yallo            ###   ########.fr       */
+/*   Created: 2023/01/30 15:44:09 by yallo             #+#    #+#             */
+/*   Updated: 2023/01/30 15:44:09 by yallo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "get_next_line.h"
-
-int	check(char *buffer)
-{
-	size_t	i;
-
-	i = 0;
-	if (buffer[i] == '\0')
-		return (1);
-	while (buffer[i])
-	{
-		if (buffer[i] == '\n')
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-size_t	size_of(t_list *head)
-{
-	t_list	*tmp;
-	size_t	count;
-	size_t	i;
-
-	tmp = head;
-	count = 0;
-	while (tmp != NULL)
-	{
-		i = 0;
-		while (tmp->data[i] != '\n' && tmp->data[i] != '\0')
-		{
-			count++;
-			i++;
-		}
-		tmp = tmp->next;
-	}
-	return (count + 1);
-}
-
-char	*make_line(t_list *head)
-{
-	int		i_list;
-	int		count;
-	char	*line;
-
-	count = 0;
-	line = malloc(sizeof(char) * size_of(head));
-	while (head != NULL)
-	{
-		i_list = 0;
-		while (i_list < BUFFER_SIZE)
-		{
-			line[count] = head->data[i_list];
-			count++;
-			i_list++;
-		}
-		head = head->next;
-	}
-	line[count] = '\0';
-	return (line);
-}
-
-void	ft_free(t_list *list)
-{
-	t_list	*head;
-
-	while (list->next != NULL)
-	{
-		head = list;
-		list = list->next;
-		free(head->data);
-		free(head);
-	}
-}
 
 char	*get_next_line(int fd)
 {
-	t_list	*list;
-	char	*line;
-	char	buffer[BUFFER_SIZE + 1];
+	static t_list	*list = NULL;
+	int				readed;
+	char			*line;
 
-	list = NULL;
-	if (fd < 0)
-	return (NULL);
-	while (read(fd, buffer, BUFFER_SIZE) != 0 && check(buffer) == -1)
-		ft_lstadd_back(&list, buffer);
-	line = make_line(list);
-	ft_free(list);
+	if (fd < 0 || BUFFER_SIZE < 0 || read(fd, line, 0) < 0)
+		return (NULL);
+	readed = 1;
+	line = NULL;
+	//1. read puis stocker dans liste
+	read_addlst(fd, &list, &readed);
+	if (list == NULL)
+		return (NULL);
+	//2. extraire la ligne de la liste
+	make_line(list, &line);
+	//3. clear la liste pour plus tard
+	clear_list(list);
 	return (line);
 }
 
-/*
+void	read_addlst(int fd, t_list **list, int *readed_ptr)
+{
+	char	*buffer;
+
+	while (!found_newline(*list) && *readed_ptr != 0)
+	{
+		buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+		if	(!buffer)
+			return ;
+		*readed_ptr = (int)read(fd, buffer, BUFFER_SIZE);
+		if ((*list == NULL && *readed_ptr == 0) || *readed_ptr == -1)
+		{
+			free(buffer);
+			return ;
+		}
+		buffer[*readed_ptr] = '\0';
+		addlst(list, buffer, *readed_ptr);
+		free(buffer);
+	}
+}
+
+void	addlst(t_list **list, char *buffer, int readed)
+{
+	size_t	i;
+	t_list	*last;
+	t_list	*new_node;
+
+	new_node = malloc(sizeof(t_list));
+	if (new_node == NULL)
+		return ;
+	new_node->next = NULL;
+	new_node->data = malloc(sizeof(char) * (readed + 1));
+	if (new_node->data == NULL)
+		return ;
+	i = 0;
+	while (new_node->data[i] && i < readed)
+	{
+		new_node->data[i] = buffer[i];
+		i++;
+	}
+	new_node->data[i] = '\0';
+	if (*list == NULL)
+	{
+		*list = new_node;
+		return ;
+	}
+	last = *list;
+	while (last->next != NULL)
+		last = last->next;
+	last->next = new_node;
+}
+
+void	make_line(t_list *list, char **line)
+{
+	t_list	*temp;
+	size_t	len;
+	size_t	i;
+
+	len = 0;
+	temp = list;
+	line = malloc(sizeof(char) * (line_len(list) + 1));
+	while (list != NULL)
+	{
+		i = 0;
+		while (list->data[i] && list->data[i] != '\n')
+		{
+			*line[len] = list->data[i];
+			len++;
+			i++;
+		}
+		list = list->next;
+	}
+}
+
+void	clear_list(t_list **list)
+{
+	t_list	*temp;
+	size_t	i;
+
+	i = 0;
+	while (*list != NULL)
+	{
+		temp = *list;
+		free(temp->data);
+		free(temp);
+		*list = (*list)->next;
+	}
+	while ()
+	{
+		 
+	}
+}
+
 #include <fcntl.h>
 
-int main(void)
+int main()
 {
-	char *line;
-	int i = 0;
 	int fd = open("book.txt", O_RDONLY);
-	line = get_next_line(fd);
-	printf("%s", line);
+	get_next_line(fd);
 	close(fd);
 }
-*/

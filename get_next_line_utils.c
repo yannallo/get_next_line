@@ -5,59 +5,48 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: yallo <yallo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/23 15:19:50 by yallo             #+#    #+#             */
-/*   Updated: 2022/12/23 15:19:50 by yallo            ###   ########.fr       */
+/*   Created: 2023/02/01 15:44:12 by yallo             #+#    #+#             */
+/*   Updated: 2023/02/01 15:44:12 by yallo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *buf)
+int	found_newline(t_list *head_ref)
 {
 	size_t	i;
-
-	i = 0;
-	while (buf[i])
-		i++;
-	return (i);
-}
-
-char	*ft_strdup(const char *str)
-{
-	size_t	i;
-	char	*buf;
-
-	i = 0;
-	buf = malloc(sizeof(char) * (ft_strlen(str) + 1));
-	if (!(buf))
-		return (0);
-	while (str[i] != '\0')
-	{
-		buf[i] = str[i];
-		i++;
-	}
-	buf[i] = '\0';
-	return (buf);
-}
-
-void	ft_lstadd_back(t_list **head_ref, char *buffer)
-{
-	t_list	*new_node;
 	t_list	*last;
 
-	if (buffer == NULL)
-		return ;
-	last = *head_ref;
-	new_node = malloc(sizeof(t_list));
-	new_node->data = ft_strdup(buffer);
-	new_node->next = NULL;
-	if (*head_ref == NULL)
-	{
-		*head_ref = new_node;
-		return ;
-	}
+	if (head_ref == NULL)
+		return (0);
+	last = head_ref;
 	while (last->next != NULL)
 		last = last->next;
-	last->next = new_node;
-	return ;
+	i = 0;
+	while (last->data[i])
+	{
+		if (last->data[i] == '\n')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+size_t	line_len(t_list *list)
+{
+	size_t	i;
+	size_t	len;
+
+	i = 0;
+	len = 0;
+	while (list != NULL)
+	{
+		i = 0;
+		while (list->data[i] && list->data[i] != '\n')
+		{
+			i++;
+			len++;
+		}
+		list = list->next;
+	}
+	return (len);
 }
