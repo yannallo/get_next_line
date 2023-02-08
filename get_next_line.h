@@ -23,15 +23,19 @@ typedef struct s_list
 	struct s_list	*next;
 }				t_list;
 
-char	*get_next_line(int fd);
 //GNL
+char	*get_next_line(int fd);
 void	read_addlst(int fd, t_list **list, int *readed_ptr);
 void	make_line(t_list *list, char **line);
 void	addlst(t_list **list, char *buffer, int readed);
+void	clear_list(t_list **list);
 
 //GNL utils
 int		found_newline(t_list *head_ref);
 size_t	line_len(t_list *list);
+size_t	ft_strlen(char *buf);
+t_list	*lstnode(t_list *list);
+void	free_list(t_list **list);
 
 # ifndef BUFFER_SIZE
 # define BUFFER_SIZE 8

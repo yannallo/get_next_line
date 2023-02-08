@@ -28,7 +28,13 @@ char	*get_next_line(int fd)
 	//2. extraire la ligne de la liste
 	make_line(list, &line);
 	//3. clear la liste pour plus tard
-	clear_list(list);
+	clear_list(&list);
+	if (line[0] == '\0')
+	{
+		free_list(&list);
+		free(line);
+		return (NULL);
+	}
 	return (line);
 }
 
@@ -78,9 +84,7 @@ void	addlst(t_list **list, char *buffer, int readed)
 		*list = new_node;
 		return ;
 	}
-	last = *list;
-	while (last->next != NULL)
-		last = last->next;
+	last = lstnode(*list);
 	last->next = new_node;
 }
 
@@ -96,8 +100,14 @@ void	make_line(t_list *list, char **line)
 	while (list != NULL)
 	{
 		i = 0;
-		while (list->data[i] && list->data[i] != '\n')
+		while (list->data[i])
 		{
+			if (list->data[i] != '\n')
+			{
+				*line[len] = list->data[i];
+				len++;
+				return ;
+			}
 			*line[len] = list->data[i];
 			len++;
 			i++;
@@ -108,21 +118,32 @@ void	make_line(t_list *list, char **line)
 
 void	clear_list(t_list **list)
 {
-	t_list	*temp;
+	t_list	*new_list;
+	t_list	*last;
 	size_t	i;
+	size_t	j;
 
+	new_list = malloc(sizeof(t_list));
+	if (new_list == NULL)
+		return ;
+	new_list->next = NULL;
+	last = lstnode(*list);
 	i = 0;
-	while (*list != NULL)
+	while (last->data[i] && last->data[i] != '\n')
+		i++;
+	new_list->data = malloc(sizeof(char) * ((ft_strlen(last->data) - i) + 1));
+	if (new_list->data == NULL)
+		return ;
+	j = 0;
+	i++;
+	while (last->data[i])
 	{
-		temp = *list;
-		free(temp->data);
-		free(temp);
-		*list = (*list)->next;
+		new_list->data[j] = last->data[i];
+		i++;
+		j++;
 	}
-	while ()
-	{
-		 
-	}
+	free_list(list);
+	*list = new_list;
 }
 
 #include <fcntl.h>
