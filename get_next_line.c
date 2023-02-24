@@ -14,47 +14,45 @@
 char	*get_next_line(int fd)
 {
 	static t_list	*list = NULL;
-	int				readed;
 	char			*line;
 
 	if (fd < 0 || BUFFER_SIZE < 0 || read(fd, line, 0) < 0)
 		return (NULL);
-	readed = 1;
 	line = NULL;
-	//1. read puis stocker dans liste
-	read_addlst(fd, &list, &readed);
+	read_addlst(fd, &list);
 	if (list == NULL)
 		return (NULL);
-	//2. extraire la ligne de la liste
 	make_line(list, &line);
-	//3. clear la liste pour plus tard
-	clear_list(&list);
 	if (line[0] == '\0')
 	{
 		free_list(&list);
 		free(line);
 		return (NULL);
 	}
+	clear_list(&list);
 	return (line);
 }
 
-void	read_addlst(int fd, t_list **list, int *readed_ptr)
+void	read_addlst(int fd, t_list **list)
 {
+	int		readed;
 	char	*buffer;
 
-	while (!found_newline(*list) && *readed_ptr != 0)
+	readed = 1;
+	while (!found_newline(*list) && readed != 0)
 	{
 		buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-		if	(!buffer)
+		if (!buffer)
 			return ;
-		*readed_ptr = (int)read(fd, buffer, BUFFER_SIZE);
-		if ((*list == NULL && *readed_ptr == 0) || *readed_ptr == -1)
+		readed = (int)read(fd, buffer, BUFFER_SIZE);
+		if ((*list == NULL && readed == 0) || readed == -1)
 		{
+			puts("error in read addlst");
 			free(buffer);
 			return ;
 		}
-		buffer[*readed_ptr] = '\0';
-		addlst(list, buffer, *readed_ptr);
+		buffer[readed] = '\0';
+		addlst(list, buffer, readed);
 		free(buffer);
 	}
 }
@@ -73,7 +71,7 @@ void	addlst(t_list **list, char *buffer, int readed)
 	if (new_node->data == NULL)
 		return ;
 	i = 0;
-	while (new_node->data[i] && i < readed)
+	while (buffer[i])
 	{
 		new_node->data[i] = buffer[i];
 		i++;
@@ -90,25 +88,25 @@ void	addlst(t_list **list, char *buffer, int readed)
 
 void	make_line(t_list *list, char **line)
 {
-	t_list	*temp;
 	size_t	len;
 	size_t	i;
 
+	*line = malloc_line(list, *line);
+	if (*line == NULL)
+		return ;
 	len = 0;
-	temp = list;
-	line = malloc(sizeof(char) * (line_len(list) + 1));
 	while (list != NULL)
 	{
 		i = 0;
 		while (list->data[i])
 		{
-			if (list->data[i] != '\n')
+			if (list->data[i] == '\n')
 			{
-				*line[len] = list->data[i];
+				(*line)[len] = list->data[i];
 				len++;
 				return ;
 			}
-			*line[len] = list->data[i];
+			(*line)[len] = list->data[i];
 			len++;
 			i++;
 		}
@@ -137,11 +135,8 @@ void	clear_list(t_list **list)
 	j = 0;
 	i++;
 	while (last->data[i])
-	{
-		new_list->data[j] = last->data[i];
-		i++;
-		j++;
-	}
+		new_list->data[j++] = last->data[i++];
+	new_list->data[j] = '\0';
 	free_list(list);
 	*list = new_list;
 }
@@ -150,7 +145,10 @@ void	clear_list(t_list **list)
 
 int main()
 {
+	char *line;
+	int i = 0;
 	int fd = open("book.txt", O_RDONLY);
-	get_next_line(fd);
+	while (i++ < 5)
+	printf("%s", get_next_line(fd));
 	close(fd);
 }
