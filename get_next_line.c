@@ -47,7 +47,6 @@ void	read_addlst(int fd, t_list **list)
 		readed = (int)read(fd, buffer, BUFFER_SIZE);
 		if ((*list == NULL && readed == 0) || readed == -1)
 		{
-			puts("error in read addlst");
 			free(buffer);
 			return ;
 		}
@@ -82,7 +81,7 @@ void	addlst(t_list **list, char *buffer, int readed)
 		*list = new_node;
 		return ;
 	}
-	last = lstnode(*list);
+	last = last_node(*list);
 	last->next = new_node;
 }
 
@@ -91,7 +90,7 @@ void	make_line(t_list *list, char **line)
 	size_t	len;
 	size_t	i;
 
-	*line = malloc_line(list, *line);
+	malloc_line(list, line);
 	if (*line == NULL)
 		return ;
 	len = 0;
@@ -100,18 +99,18 @@ void	make_line(t_list *list, char **line)
 		i = 0;
 		while (list->data[i])
 		{
-			if (list->data[i] == '\n')
-			{
-				(*line)[len] = list->data[i];
-				len++;
-				return ;
-			}
 			(*line)[len] = list->data[i];
 			len++;
+			if (list->data[i] == '\n')
+			{
+				(*line)[len] = '\0';
+				return ;
+			}
 			i++;
 		}
 		list = list->next;
 	}
+	(*line)[len] = '\0';
 }
 
 void	clear_list(t_list **list)
@@ -125,7 +124,7 @@ void	clear_list(t_list **list)
 	if (new_list == NULL)
 		return ;
 	new_list->next = NULL;
-	last = lstnode(*list);
+	last = last_node(*list);
 	i = 0;
 	while (last->data[i] && last->data[i] != '\n')
 		i++;
@@ -148,7 +147,15 @@ int main()
 	char *line;
 	int i = 0;
 	int fd = open("book.txt", O_RDONLY);
-	while (i++ < 5)
-	printf("%s", get_next_line(fd));
+	while (i == 0)
+	{
+		line = get_next_line(fd);
+		if (line == NULL)
+		{
+			close(fd);
+			break;
+		}
+		printf("%s", line);
+	}
 	close(fd);
 }

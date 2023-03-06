@@ -28,7 +28,7 @@ int	found_newline(t_list *head_ref)
 
 	if (head_ref == NULL)
 		return (0);
-	last = lstnode(head_ref);
+	last = last_node(head_ref);
 	i = 0;
 	while (last->data[i])
 	{
@@ -39,7 +39,7 @@ int	found_newline(t_list *head_ref)
 	return (0);
 }
 
-char	*malloc_line(t_list *list, char *line)
+void	malloc_line(t_list *list, char **line)
 {
 	size_t	i;
 	size_t	len;
@@ -57,11 +57,10 @@ char	*malloc_line(t_list *list, char *line)
 		}
 		list = list->next;
 	}
-	line = malloc(sizeof(char) * (len + 1));
-	return (line);
+	*line = malloc(sizeof(char) * (len + 1));
 }
 
-t_list	*lstnode(t_list *list)
+t_list	*last_node(t_list *list)
 {
 	t_list	*temp;
 
@@ -81,14 +80,5 @@ void	free_list(t_list **list)
 		*list = (*list)->next;
 		free(temp->data);
 		free(temp);
-	}
-}
-
-void	printlst(t_list *list)
-{
-	while (list != NULL)
-	{
-		printf("%s", list->data);
-		list = list->next;
 	}
 }

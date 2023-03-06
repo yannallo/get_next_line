@@ -32,13 +32,10 @@ void	clear_list(t_list **list);
 
 //GNL utils
 int		found_newline(t_list *head_ref);
-char	*malloc_line(t_list *list, char *line);
+void	malloc_line(t_list *list, char **line);
 size_t	ft_strlen(char *buf);
-t_list	*lstnode(t_list *list);
+t_list	*last_node(t_list *list);
 void	free_list(t_list **list);
-
-
-void	printlst(t_list *list);
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 8
