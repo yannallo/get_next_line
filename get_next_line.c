@@ -136,7 +136,7 @@ void	clear_list(t_list **list)
 	}
 }
 
-/*#include <fcntl.h>
+#include <fcntl.h>
 
 int main()
 {
@@ -153,4 +153,4 @@ int main()
 	}
 	free(line);
 	close(fd);
-}*/
+}
