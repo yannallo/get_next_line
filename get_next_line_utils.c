@@ -50,10 +50,10 @@ void	malloc_line(t_list *list, char **line)
 		i = 0;
 		while (list->data[i])
 		{
+			len++;
 			if (list->data[i] == '\n')
 				break ;
 			i++;
-			len++;
 		}
 		list = list->next;
 	}

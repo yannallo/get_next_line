@@ -16,9 +16,9 @@ char	*get_next_line(int fd)
 	static t_list	*list = NULL;
 	char			*line;
 
+	line = NULL;
 	if (fd < 0 || BUFFER_SIZE < 0 || read(fd, line, 0) < 0)
 		return (NULL);
-	line = NULL;
 	read_addlst(fd, &list);
 	if (list == NULL)
 		return (NULL);
@@ -45,7 +45,7 @@ void	read_addlst(int fd, t_list **list)
 		if (!buffer)
 			return ;
 		readed = (int)read(fd, buffer, BUFFER_SIZE);
-		if ((*list == NULL && readed == 0) || readed == -1)
+		if ((list == NULL && readed == 0) || readed == -1)
 		{
 			free(buffer);
 			return ;
@@ -102,10 +102,7 @@ void	make_line(t_list *list, char **line)
 			(*line)[len] = list->data[i];
 			len++;
 			if (list->data[i] == '\n')
-			{
-				(*line)[len] = '\0';
-				return ;
-			}
+				break ;
 			i++;
 		}
 		list = list->next;
@@ -115,47 +112,45 @@ void	make_line(t_list *list, char **line)
 
 void	clear_list(t_list **list)
 {
-	t_list	*new_list;
+	int		i;
 	t_list	*last;
-	size_t	i;
-	size_t	j;
 
-	new_list = malloc(sizeof(t_list));
-	if (new_list == NULL)
-		return ;
-	new_list->next = NULL;
-	last = last_node(*list);
 	i = 0;
-	while (last->data[i] && last->data[i] != '\n')
+	last = last_node(*list);
+	while (last->data[i] != '\n')
+	{
+		if (last->data[i] == '\0')
+		{
+			free_list(list);
+			return ;
+		}
 		i++;
-	new_list->data = malloc(sizeof(char) * ((ft_strlen(last->data) - i) + 1));
-	if (new_list->data == NULL)
-		return ;
-	j = 0;
-	i++;
-	while (last->data[i])
-		new_list->data[j++] = last->data[i++];
-	new_list->data[j] = '\0';
-	free_list(list);
-	*list = new_list;
+	}
+	add_list(list, &(last->data[i + 1]), ft_strlen(last->data) - i);
+	while ((*list)->next != NULL)
+	{
+		last = *list;
+		(*list) = (*list)->next;
+		free(last->data);
+		free(last);
+	}
 }
 
-#include <fcntl.h>
+/*#include <fcntl.h>
 
 int main()
 {
 	char *line;
 	int i = 0;
 	int fd = open("book.txt", O_RDONLY);
+
 	while (i == 0)
 	{
 		line = get_next_line(fd);
 		if (line == NULL)
-		{
-			close(fd);
-			break;
-		}
+			break ;
 		printf("%s", line);
 	}
+	free(line);
 	close(fd);
-}
+}*/
