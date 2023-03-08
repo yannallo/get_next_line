@@ -27,11 +27,11 @@ typedef struct s_list
 char	*get_next_line(int fd);
 void	read_addlst(int fd, t_list **list);
 void	make_line(t_list *list, char **line);
-void	addlst(t_list **list, char *buffer, int readed);
+void	add_list(t_list **list, char *buffer, int readed);
 void	clear_list(t_list **list);
 
 //GNL utils
-int		found_newline(t_list *head_ref);
+int		check_newline(t_list *head_ref);
 void	malloc_line(t_list *list, char **line);
 size_t	ft_strlen(char *buf);
 t_list	*last_node(t_list *list);

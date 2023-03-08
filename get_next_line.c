@@ -39,7 +39,7 @@ void	read_addlst(int fd, t_list **list)
 	char	*buffer;
 
 	readed = 1;
-	while (!found_newline(*list) && readed != 0)
+	while (!check_newline(*list) && readed != 0)
 	{
 		buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 		if (!buffer)
@@ -51,12 +51,12 @@ void	read_addlst(int fd, t_list **list)
 			return ;
 		}
 		buffer[readed] = '\0';
-		addlst(list, buffer, readed);
+		add_list(list, buffer, readed);
 		free(buffer);
 	}
 }
 
-void	addlst(t_list **list, char *buffer, int readed)
+void	add_list(t_list **list, char *buffer, int readed)
 {
 	size_t	i;
 	t_list	*last;
