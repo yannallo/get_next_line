@@ -21,7 +21,7 @@ size_t	ft_strlen(char *buf)
 	return (i);
 }
 
-int	found_newline(t_list *head_ref)
+int	check_newline(t_list *head_ref)
 {
 	size_t	i;
 	t_list	*last;
