@@ -46,10 +46,7 @@ void	read_addlst(int fd, t_list **list)
 			return ;
 		readed = (int)read(fd, buffer, BUFFER_SIZE);
 		if ((list == NULL && readed == 0) || readed == -1)
-		{
-			free(buffer);
-			return ;
-		}
+			return (free(buffer));
 		buffer[readed] = '\0';
 		add_list(list, buffer, readed);
 		free(buffer);
@@ -136,7 +133,7 @@ void	clear_list(t_list **list)
 	}
 }
 
-#include <fcntl.h>
+/*#include <fcntl.h>
 
 int main()
 {
@@ -150,7 +147,7 @@ int main()
 		if (line == NULL)
 			break ;
 		printf("%s", line);
+		free(line);
 	}
-	free(line);
 	close(fd);
-}
+}*/
