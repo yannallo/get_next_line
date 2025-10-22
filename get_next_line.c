@@ -132,22 +132,3 @@ void	clear_list(t_list **list)
 		free(last);
 	}
 }
-
-/*#include <fcntl.h>
-
-int main()
-{
-	char *line;
-	int i = 0;
-	int fd = open("book.txt", O_RDONLY);
-
-	while (i == 0)
-	{
-		line = get_next_line(fd);
-		if (line == NULL)
-			break ;
-		printf("%s", line);
-		free(line);
-	}
-	close(fd);
-}*/
