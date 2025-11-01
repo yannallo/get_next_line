@@ -1,84 +1,86 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: yallo <yallo@student.42.fr>                +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/01 15:44:12 by yallo             #+#    #+#             */
-/*   Updated: 2023/02/01 15:44:12 by yallo            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 #include "get_next_line.h"
 
-size_t	ft_strlen(char *buf)
+size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
+	if (!s)
+		return 0;
 	i = 0;
-	while (buf[i])
+	while (s[i])
 		i++;
-	return (i);
+	return i;
 }
 
-int	check_newline(t_list *head_ref)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	size_t	i;
-	t_list	*last;
+	size_t i;
+	size_t slen;
+	char *buf;
 
-	if (head_ref == NULL)
-		return (0);
-	last = last_node(head_ref);
+	if (!s)
+		return NULL;
+	slen = ft_strlen(s);
+	if (start >= slen)
+		return NULL;
+	if (len > slen - start)
+		len = slen - start;
+	buf = malloc(sizeof(char) * (len + 1));
+	if (!buf)
+		return NULL;
 	i = 0;
-	while (last->data[i])
+	while (i < len)
 	{
-		if (last->data[i] == '\n')
-			return (1);
+		buf[i] = s[start + i];
 		i++;
 	}
-	return (0);
+	buf[i] = '\0';
+	return buf;
 }
 
-void	malloc_line(t_list *list, char **line)
+char	*ft_strchr(const char *s, int c)
 {
-	size_t	i;
-	size_t	len;
-
-	len = 0;
-	while (list)
+	if (!s)
+		return NULL;
+	while (*s)
 	{
-		i = 0;
-		while (list->data[i])
-		{
-			len++;
-			if (list->data[i] == '\n')
-				break ;
-			i++;
-		}
-		list = list->next;
+		if (*s == (char) c)
+			return (char *) s;
+		s++;
 	}
-	*line = malloc(sizeof(char) * (len + 1));
+	if (*s == (char) c)
+		return (char *) s;
+	return NULL;
 }
 
-t_list	*last_node(t_list *list)
+char	*ft_strjoin(char *s1, char const *s2)
 {
-	t_list	*temp;
+	size_t i;
+	size_t j;
+	char *buf;
 
-	temp = list;
-	while (temp->next != NULL)
-		temp = temp->next;
-	return (temp);
-}
-
-void	free_list(t_list **list)
-{
-	t_list	*temp;
-
-	while (*list != NULL)
+	if (!s1 && !s2)
+		return NULL;
+	buf = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!buf)
+		return NULL;
+	i = 0;
+	j = 0;
+	while (s1 && s1[i])
 	{
-		temp = *list;
-		*list = (*list)->next;
-		free(temp->data);
-		free(temp);
+		buf[j] = s1[i];
+		i++;
+		j++;
 	}
+	i = 0;
+	while (s2 && s2[i])
+	{
+		buf[j] = s2[i];
+		i++;
+		j++;
+	}
+	buf[j] = '\0';
+	free(s1);
+	return buf;
 }
+
