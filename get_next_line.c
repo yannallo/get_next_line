@@ -1,68 +1,82 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yallo <yallo@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/30 15:44:09 by yallo             #+#    #+#             */
+/*   Updated: 2023/01/30 15:44:09 by yallo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
-char *read_fd(int fd, char *stash)
+static char	*read_fd(int fd, char *stash)
 {
-	char buffer[BUFFER_SIZE + 1];
-	ssize_t readed = 1;
+	char	buffer[BUFFER_SIZE + 1];
+	ssize_t	readed;
 
-	while (!ft_strchr(stash, '\n') && readed > 0)
+	readed = 1;
+	while (!ft_strchr_gnl(stash, '\n') && readed > 0)
 	{
 		readed = read(fd, buffer, BUFFER_SIZE);
 		if (readed == -1)
 		{
 			if (stash)
 				free(stash);
-			return NULL;
+			return (NULL);
 		}
 		buffer[readed] = '\0';
-		stash = ft_strjoin(stash, buffer);
+		stash = ft_strjoin_gnl(stash, buffer);
 		if (!stash)
-			return NULL;
+			return (NULL);
 	}
-	return stash;
+	return (stash);
 }
 
-char *extract_line(char *stash)
+static char	*extract_line(char *stash)
 {
-	size_t i = 0;
-	char *line = NULL;
+	size_t	i;
+	char	*line;
 
+	i = 0;
+	line = NULL;
 	if (!stash)
-		return NULL;
+		return (NULL);
 	while (stash[i] && stash[i] != '\n')
 		i++;
 	if (stash[i])
 		i++;
-	line = ft_substr(stash, 0, i);
-	return line;
+	line = ft_substr_gnl(stash, 0, i);
+	return (line);
 }
 
-char *extract_buffer(char *stash)
+static char	*extract_buffer(char *stash)
 {
-	size_t i = 0;
-	char *buf = NULL;
+	size_t	i;
+	char	*buf;
 
+	i = 0;
+	buf = NULL;
 	while (stash[i] && stash[i] != '\n')
 		i++;
 	if (!stash[i])
-	{
-		free(stash);
-		return NULL;
-	}
-	buf = ft_substr(stash, i+1, ft_strlen(stash) - i - 1);
+		return (free(stash), NULL);
+	buf = ft_substr_gnl(stash, i + 1, ft_strlen_gnl(stash) - i - 1);
 	free(stash);
-	return buf;
+	return (buf);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	static char *stash;
-	char *line;
+	static char	*stash;
+	char		*line;
 
 	if (fd < 0 || read(fd, NULL, 0) == -1 || BUFFER_SIZE <= 0)
-		return NULL;
+		return (NULL);
 	stash = read_fd(fd, stash);
 	line = extract_line(stash);
 	stash = extract_buffer(stash);
-	return line;
+	return (line);
 }
